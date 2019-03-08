@@ -1,0 +1,24 @@
+{
+	"name": "sqldwAdventureWorksDestTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqldwAdventureWorksDestination",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TableName": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "delta_w_updates"
+		},
+		"type": "AzureSqlDWTable",
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
