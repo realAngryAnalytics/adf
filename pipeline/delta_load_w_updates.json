@@ -1,0 +1,197 @@
+{
+	"name": "delta_load_w_updates",
+	"properties": {
+		"description": "Copy new or updated rows only from database using external control table",
+		"activities": [
+			{
+				"name": "LookupLastWaterMark",
+				"description": "Retrieve  the last high-watermark value stored in external control table",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource"
+					},
+					"dataset": {
+						"referenceName": "sqldwAdventureWorksDestTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": {
+								"value": "@pipeline().parameters.Control_Table_Table_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "LookupCurrentWaterMark",
+				"description": "Retrieve  the current maximum value in watermark column of source data store",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select MAX(',pipeline().parameters.Data_Source_WaterMarkColumn, ') as NewWatermarkValue from ',pipeline().parameters.Data_Source_Table_Name)",
+							"type": "Expression"
+						}
+					},
+					"dataset": {
+						"referenceName": "sqlAdventureWorksSourceTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": {
+								"value": "@pipeline().parameters.Data_Source_Table_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "DeltaCopyfromDB",
+				"description": "Copy activity to use query to filter the delta data by > last high-watermark and <= current high-watermark from source database, and then only copy the changes to the destination store.",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "LookupCurrentWaterMark",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LookupLastWaterMark",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowPolyBase": true,
+						"writeBatchSize": 10000,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						}
+					},
+					"enableStaging": true,
+					"dataIntegrationUnits": 0
+				},
+				"inputs": [
+					{
+						"referenceName": "sqlAdventureWorksSourceTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": {
+								"value": "@pipeline().parameters.Data_Source_Table_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sqldwAdventureWorksDestTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": {
+								"value": "@pipeline().parameters.Data_Destination_Staging_Table_Name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "UpdateWaterMark",
+				"description": "Stored procedure activity to store the new high-watermark value into external control table for delta data loading. ",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "DeltaCopyfromDB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30
+				},
+				"typeProperties": {
+					"storedProcedureName": "[ANGRY].[update_watermark]",
+					"storedProcedureParameters": {
+						"LastModifiedtime": {
+							"value": {
+								"value": "@activity('LookupCurrentWaterMark').output.firstRow.NewWatermarkValue",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"TableName": {
+							"value": {
+								"value": "@pipeline().parameters.Data_Source_Table_Name",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "sqldwAdventureWorksDestination",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"Data_Source_Table_Name": {
+				"type": "String",
+				"defaultValue": "ANGRY.FactResellerSales"
+			},
+			"Data_Source_WaterMarkColumn": {
+				"type": "String",
+				"defaultValue": "ModifiedDate"
+			},
+			"Data_Destination_Table_Name": {
+				"type": "String",
+				"defaultValue": "ANGRY.FactResellerSales"
+			},
+			"Control_Table_Table_Name": {
+				"type": "String",
+				"defaultValue": "ANGRY.watermarktable"
+			},
+			"Control_Table_Column_Name": {
+				"type": "String",
+				"defaultValue": "WatermarkValue"
+			},
+			"Data_Destination_Staging_Table_Name": {
+				"type": "String",
+				"defaultValue": "ANGRY.FactResellerSales_Staging"
+			}
+		},
+		"folder": {
+			"name": "delta_w_updates"
+		}
+	}
+}
