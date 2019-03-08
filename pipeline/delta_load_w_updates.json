@@ -95,6 +95,14 @@
 						}
 					},
 					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "blobstagingaccount",
+							"type": "LinkedServiceReference"
+						},
+						"path": "adfstagingcopydata",
+						"enableCompression": true
+					},
 					"dataIntegrationUnits": 0
 				},
 				"inputs": [
