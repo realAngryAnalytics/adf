@@ -82,7 +82,11 @@
 				},
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource"
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "select * from \n@{pipeline().parameters.Data_Source_Table_Name} where @{pipeline().parameters.Data_Source_WaterMarkColumn} > '@{activity('LookupLastWaterMark').output.firstRow.WatermarkValue}' and @{pipeline().parameters.Data_Source_WaterMarkColumn} <= '@{activity('LookupCurrentWaterMark').output.firstRow.NewWatermarkValue}'",
+							"type": "Expression"
+						}
 					},
 					"sink": {
 						"type": "SqlDWSink",
@@ -131,8 +135,8 @@
 				]
 			},
 			{
-				"name": "UpdateWaterMark",
-				"description": "Stored procedure activity to store the new high-watermark value into external control table for delta data loading. ",
+				"name": "DeltaLoadFromStaging",
+				"description": "Stored procedure activity to find the existing records in the destination table and delete them prior to  inserting the records from staging. ",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -148,18 +152,25 @@
 					"retryIntervalInSeconds": 30
 				},
 				"typeProperties": {
-					"storedProcedureName": "[ANGRY].[update_watermark]",
+					"storedProcedureName": "[ANGRY].[delta_load_w_updates]",
 					"storedProcedureParameters": {
-						"LastModifiedtime": {
+						"LastModifiedDatetime": {
 							"value": {
 								"value": "@activity('LookupCurrentWaterMark').output.firstRow.NewWatermarkValue",
 								"type": "Expression"
 							},
 							"type": "DateTime"
 						},
+						"StagingTableName": {
+							"value": {
+								"value": "@pipeline().parameters.Data_Destination_Staging_Table_Name",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
 						"TableName": {
 							"value": {
-								"value": "@pipeline().parameters.Data_Source_Table_Name",
+								"value": "@pipeline().parameters.Data_Destination_Table_Name",
 								"type": "Expression"
 							},
 							"type": "String"
