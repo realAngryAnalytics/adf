@@ -92,6 +92,10 @@
 						"type": "SqlDWSink",
 						"allowPolyBase": true,
 						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.Data_Destination_Staging_Table_Name)}",
+							"type": "Expression"
+						},
 						"polyBaseSettings": {
 							"rejectValue": 0,
 							"rejectType": "value",
