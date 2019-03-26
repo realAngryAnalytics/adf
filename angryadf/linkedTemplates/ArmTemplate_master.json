@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "angryadf"
 		},
+		"blobstagingaccount_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
+		},
 		"sqlAdventureWorksSource_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqlAdventureWorksSource'"
@@ -14,10 +18,6 @@
 		"sqldwAdventureWorksDestination_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
-		},
-		"blobstagingaccount_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
 		},
 		"containerUri": {
 			"type": "string",
@@ -46,14 +46,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"blobstagingaccount_connectionString": {
+						"value": "[parameters('blobstagingaccount_connectionString')]"
+					},
 					"sqlAdventureWorksSource_connectionString": {
 						"value": "[parameters('sqlAdventureWorksSource_connectionString')]"
 					},
 					"sqldwAdventureWorksDestination_connectionString": {
 						"value": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
-					},
-					"blobstagingaccount_connectionString": {
-						"value": "[parameters('blobstagingaccount_connectionString')]"
 					}
 				}
 			},

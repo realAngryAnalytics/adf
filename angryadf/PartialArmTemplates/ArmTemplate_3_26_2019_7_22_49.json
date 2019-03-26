@@ -6,18 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory Name",
 			"defaultValue": "angryadf"
-		},
-		"blobstagingaccount_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
-		},
-		"sqlAdventureWorksSource_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sqlAdventureWorksSource'"
-		},
-		"sqldwAdventureWorksDestination_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
 		}
 	},
 	"variables": {
@@ -35,13 +23,11 @@
 						"name": "LookupLastWaterMark",
 						"description": "Retrieve  the last high-watermark value stored in external control table",
 						"type": "Lookup",
-						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource"
@@ -62,13 +48,11 @@
 						"name": "LookupCurrentWaterMark",
 						"description": "Retrieve  the current maximum value in watermark column of source data store",
 						"type": "Lookup",
-						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
@@ -112,7 +96,6 @@
 							"retry": 0,
 							"retryIntervalInSeconds": 30
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
@@ -188,7 +171,6 @@
 							"retry": 0,
 							"retryIntervalInSeconds": 30
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"storedProcedureName": "[concat('[', 'ANGRY].[delta_load_w_updates]')]",
 							"storedProcedureParameters": {
@@ -249,114 +231,8 @@
 				},
 				"folder": {
 					"name": "delta_w_updates"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sqldwAdventureWorksDestTable')]",
-				"[concat(variables('factoryId'), '/datasets/sqlAdventureWorksSourceTable')]",
-				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]",
-				"[concat(variables('factoryId'), '/linkedServices/blobstagingaccount')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqlAdventureWorksSourceTable')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqlAdventureWorksSource",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TableName": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "delta_w_updates"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
 				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqlAdventureWorksSource')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqldwAdventureWorksDestTable')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqldwAdventureWorksDestination",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TableName": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "delta_w_updates"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blobstagingaccount')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('blobstagingaccount_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqlAdventureWorksSource')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('sqlAdventureWorksSource_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqldwAdventureWorksDestination')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDW",
-				"typeProperties": {
-					"connectionString": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
-				}
-			},
-			"dependsOn": []
+			}
 		}
 	]
 }

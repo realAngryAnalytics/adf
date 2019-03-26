@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "angryadf"
 		},
+		"blobstagingaccount_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
+		},
 		"sqlAdventureWorksSource_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqlAdventureWorksSource'"
@@ -14,16 +18,25 @@
 		"sqldwAdventureWorksDestination_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
-		},
-		"blobstagingaccount_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/blobstagingaccount')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('blobstagingaccount_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/sqlAdventureWorksSource')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -46,19 +59,6 @@
 				"type": "AzureSqlDW",
 				"typeProperties": {
 					"connectionString": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blobstagingaccount')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('blobstagingaccount_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -214,12 +214,20 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource"
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * from \n@{pipeline().parameters.Data_Source_Table_Name} where @{pipeline().parameters.Data_Source_WaterMarkColumn} > '@{activity('LookupLastWaterMark').output.firstRow.WatermarkValue}' and @{pipeline().parameters.Data_Source_WaterMarkColumn} <= '@{activity('LookupCurrentWaterMark').output.firstRow.NewWatermarkValue}'",
+									"type": "Expression"
+								}
 							},
 							"sink": {
 								"type": "SqlDWSink",
 								"allowPolyBase": true,
 								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.Data_Destination_Staging_Table_Name)}",
+									"type": "Expression"
+								},
 								"polyBaseSettings": {
 									"rejectValue": 0,
 									"rejectType": "value",
@@ -263,8 +271,8 @@
 						]
 					},
 					{
-						"name": "UpdateWaterMark",
-						"description": "Stored procedure activity to store the new high-watermark value into external control table for delta data loading. ",
+						"name": "DeltaLoadFromStaging",
+						"description": "Stored procedure activity to find the existing records in the destination table and delete them prior to  inserting the records from staging. ",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
@@ -281,18 +289,25 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[concat('[', 'ANGRY].[update_watermark]')]",
+							"storedProcedureName": "[concat('[', 'ANGRY].[delta_load_w_updates]')]",
 							"storedProcedureParameters": {
-								"LastModifiedtime": {
+								"LastModifiedDatetime": {
 									"value": {
 										"value": "@activity('LookupCurrentWaterMark').output.firstRow.NewWatermarkValue",
 										"type": "Expression"
 									},
 									"type": "DateTime"
 								},
+								"StagingTableName": {
+									"value": {
+										"value": "@pipeline().parameters.Data_Destination_Staging_Table_Name",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
 								"TableName": {
 									"value": {
-										"value": "@pipeline().parameters.Data_Source_Table_Name",
+										"value": "@pipeline().parameters.Data_Destination_Table_Name",
 										"type": "Expression"
 									},
 									"type": "String"

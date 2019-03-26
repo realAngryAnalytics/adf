@@ -5,13 +5,13 @@
 		"factoryName": {
 			"value": "angryadf"
 		},
+		"blobstagingaccount_connectionString": {
+			"value": ""
+		},
 		"sqlAdventureWorksSource_connectionString": {
 			"value": ""
 		},
 		"sqldwAdventureWorksDestination_connectionString": {
-			"value": ""
-		},
-		"blobstagingaccount_connectionString": {
 			"value": ""
 		}
 	}
