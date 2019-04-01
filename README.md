@@ -2,8 +2,9 @@
 
 This repository contains Azure Data Factory templates that you can import into your own projects. Create a data factory in Azure and enter its name and resource group in the below template deployment.
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
-
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FrealAngryAnalytics%2Fadf%2Fmaster%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
 
 This is a template that requires three connection strings currently
 * blob storage account connection string - will be used for staging the load to SQL DW. This can be found in your "Keys" dialog of your blob storage account
