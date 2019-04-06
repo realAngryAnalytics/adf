@@ -179,6 +179,9 @@
 				"type": "String",
 				"defaultValue": "FilterQuery"
 			}
+		},
+		"folder": {
+			"name": "bulk_copy"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
