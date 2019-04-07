@@ -147,7 +147,7 @@
 							"source": {
 								"type": "SqlDWSource",
 								"sqlReaderQuery": {
-									"value": "@concat('select PartitionId, SourceTableName, FilterQuery from ', pipeline().parameters.Control_Table_Name, ' where success_ind is null OR success_ind <> ''Y''')",
+									"value": "@concat('select PartitionId, DestTableName, FilterQuery from ', pipeline().parameters.Control_Table_Name, ' where success_ind is null OR success_ind <> ''Y''')",
 									"type": "Expression"
 								}
 							},
@@ -232,7 +232,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"TableName": {
-													"value": "@pipeline().parameters.Control_Table_Schema_SourceTableName",
+													"value": "@pipeline().parameters.Control_Table_Schema_DestTableName",
 													"type": "Expression"
 												}
 											}
@@ -243,7 +243,7 @@
 											"referenceName": "sqldwAdventureWorksDestTable",
 											"type": "DatasetReference",
 											"parameters": {
-												"TableName": "@item().SourceTableName"
+												"TableName": "@item().DestTableName"
 											}
 										}
 									]
@@ -279,7 +279,7 @@
 											},
 											"TableName": {
 												"value": {
-													"value": "@item().SourceTableName",
+													"value": "@item().DestTableName",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -304,9 +304,9 @@
 						"type": "String",
 						"defaultValue": "PartitionID"
 					},
-					"Control_Table_Schema_SourceTableName": {
+					"Control_Table_Schema_DestTableName": {
 						"type": "String",
-						"defaultValue": "SourceTableName"
+						"defaultValue": "DestTableName"
 					},
 					"Control_Table_Schema_FilterQuery": {
 						"type": "String",
