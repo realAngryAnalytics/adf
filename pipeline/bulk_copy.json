@@ -100,7 +100,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"TableName": {
-											"value": "@pipeline().parameters.Control_Table_Schema_SourceTableName",
+											"value": "@pipeline().parameters.Control_Table_Schema_DestTableName",
 											"type": "Expression"
 										}
 									}
