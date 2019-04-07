@@ -171,7 +171,7 @@
 				"type": "String",
 				"defaultValue": "PartitionID"
 			},
-			"Control_Table_Schema_SourceTableName": {
+			"Control_Table_Schema_DestTableName": {
 				"type": "String",
 				"defaultValue": "DestTableName"
 			},
