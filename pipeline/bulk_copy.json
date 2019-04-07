@@ -165,7 +165,7 @@
 		"parameters": {
 			"Control_Table_Name": {
 				"type": "String",
-				"defaultValue": "ADF.bulkcopycontroltable"
+				"defaultValue": "ANGRY.bulkcopycontroltable"
 			},
 			"Control_Table_Schema_PartitionID": {
 				"type": "String",
