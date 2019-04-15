@@ -1,0 +1,166 @@
+{
+	"name": "truncate_and_reload",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachLookupTable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetReloadList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetReloadList').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 5,
+					"activities": [
+						{
+							"name": "lookup_tbl_copy",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 1,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"source": {
+									"type": "SqlSource",
+									"sqlReaderQuery": {
+										"value": "select * from @{item().SourceTableName}",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "SqlDWSink",
+									"allowPolyBase": true,
+									"writeBatchSize": 10000,
+									"preCopyScript": {
+										"value": "TRUNCATE TABLE @{item().DestTableName}",
+										"type": "Expression"
+									},
+									"polyBaseSettings": {
+										"rejectValue": 0,
+										"rejectType": "value",
+										"useTypeDefault": false
+									}
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "blobstagingaccount",
+										"type": "LinkedServiceReference"
+									},
+									"path": "adfstagingcopydata",
+									"enableCompression": true
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "sqlAdventureWorksSourceTable",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@{item().SourceTableName}",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "sqldwAdventureWorksDestTable",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "@{item().DestTableName}"
+									}
+								}
+							]
+						},
+						{
+							"name": "UpdateWatermark",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "lookup_tbl_copy",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"storedProcedureName": "ANGRY.update_watermark",
+								"storedProcedureParameters": {
+									"LastModifiedtime": {
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"TableName": {
+										"value": {
+											"value": "@{item().DestTableName}",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "sqldwAdventureWorksDestination",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "GetReloadList",
+				"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 2,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource"
+					},
+					"dataset": {
+						"referenceName": "sqldwAdventureWorksDestTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "[ANGRY].[reloadcontroltable]"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"Control_Table_Name": {
+				"type": "String",
+				"defaultValue": "ANGRY.reloadcontroltable"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
