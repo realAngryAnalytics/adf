@@ -160,6 +160,9 @@
 				"type": "String",
 				"defaultValue": "ANGRY.reloadcontroltable"
 			}
+		},
+		"folder": {
+			"name": "truncate_and_reload"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
