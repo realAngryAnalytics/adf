@@ -10,9 +10,6 @@
 				"type": "String"
 			}
 		},
-		"folder": {
-			"name": "delta_w_updates"
-		},
 		"type": "AzureSqlTable",
 		"typeProperties": {
 			"tableName": {
