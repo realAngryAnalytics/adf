@@ -517,7 +517,7 @@
 											"polyBaseSettings": {
 												"rejectValue": 0,
 												"rejectType": "value",
-												"useTypeDefault": false
+												"useTypeDefault": true
 											}
 										},
 										"enableStaging": true,
