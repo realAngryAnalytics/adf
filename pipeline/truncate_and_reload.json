@@ -59,7 +59,7 @@
 										"type": "LinkedServiceReference"
 									},
 									"path": "adfstagingcopydata",
-									"enableCompression": true
+									"enableCompression": false
 								}
 							},
 							"inputs": [
