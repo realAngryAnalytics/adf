@@ -1,7 +1,7 @@
 {
 	"name": "trigger2",
 	"properties": {
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
