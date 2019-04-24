@@ -527,7 +527,7 @@
 												"type": "LinkedServiceReference"
 											},
 											"path": "adfstagingcopydata",
-											"enableCompression": true
+											"enableCompression": false
 										}
 									},
 									"inputs": [
@@ -658,9 +658,6 @@
 						"type": "String"
 					}
 				},
-				"folder": {
-					"name": "delta_w_updates"
-				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"typeProperties": {
@@ -687,9 +684,6 @@
 					"TableName": {
 						"type": "String"
 					}
-				},
-				"folder": {
-					"name": "delta_w_updates"
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
