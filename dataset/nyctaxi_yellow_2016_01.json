@@ -1,0 +1,93 @@
+{
+	"name": "nyctaxi_yellow_2016_01",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adlsv2sjhdatabricks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "yellow_tripdata_2017-01.csv",
+				"folderPath": "2016",
+				"fileSystem": "nyctaxi"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "VendorID",
+				"type": "String"
+			},
+			{
+				"name": "tpep_pickup_datetime",
+				"type": "String"
+			},
+			{
+				"name": "tpep_dropoff_datetime",
+				"type": "String"
+			},
+			{
+				"name": "passenger_count",
+				"type": "String"
+			},
+			{
+				"name": "trip_distance",
+				"type": "String"
+			},
+			{
+				"name": "RatecodeID",
+				"type": "String"
+			},
+			{
+				"name": "store_and_fwd_flag",
+				"type": "String"
+			},
+			{
+				"name": "PULocationID",
+				"type": "String"
+			},
+			{
+				"name": "DOLocationID",
+				"type": "String"
+			},
+			{
+				"name": "payment_type",
+				"type": "String"
+			},
+			{
+				"name": "fare_amount",
+				"type": "String"
+			},
+			{
+				"name": "extra",
+				"type": "String"
+			},
+			{
+				"name": "mta_tax",
+				"type": "String"
+			},
+			{
+				"name": "tip_amount",
+				"type": "String"
+			},
+			{
+				"name": "tolls_amount",
+				"type": "String"
+			},
+			{
+				"name": "improvement_surcharge",
+				"type": "String"
+			},
+			{
+				"name": "total_amount",
+				"type": "String"
+			}
+		]
+	}
+}
