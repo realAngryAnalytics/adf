@@ -1,0 +1,20 @@
+{
+	"name": "nyctaxi_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "blobsjhdatabricks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "nyctaxifinal",
+				"container": "nyctaxi-p"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
