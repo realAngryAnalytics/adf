@@ -1,5 +1,5 @@
 {
-	"name": "nyctaxi_parquet",
+	"name": "nyctaxi2016_parquet",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "blobsjhdatabricks",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "nyctaxiview.parquet",
+				"folderPath": "nyctaxi2016.parquet",
 				"container": "nyctaxi-p"
 			},
 			"compressionCodec": "snappy"
