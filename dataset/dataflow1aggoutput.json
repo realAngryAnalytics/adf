@@ -15,6 +15,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"folderPath": "angryadf",
 				"container": "inputs3"
 			},
 			"columnDelimiter": ",",
