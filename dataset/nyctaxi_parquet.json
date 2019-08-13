@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "nyctaxi.parquet",
+				"folderPath": "nyctaxiview.parquet",
 				"container": "nyctaxi-p"
 			},
 			"compressionCodec": "snappy"
