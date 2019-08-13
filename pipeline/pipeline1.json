@@ -17,7 +17,12 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "nyctaxiagg",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"aggoutput": {
+								"runtime": "1"
+							}
+						}
 					}
 				}
 			}
