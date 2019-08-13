@@ -1,0 +1,60 @@
+{
+	"name": "sqldwgeocomplete",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqldwAdventureWorksDestination",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "GeographyID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Latitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Longitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "LatLong",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZipcodeBKey",
+				"type": "nvarchar"
+			},
+			{
+				"name": "County",
+				"type": "nvarchar"
+			},
+			{
+				"name": "City",
+				"type": "nvarchar"
+			},
+			{
+				"name": "State",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Zipcode",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "GeoComplete"
+		}
+	}
+}
