@@ -15,10 +15,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@utcnow()",
-					"type": "Expression"
-				},
 				"container": "inputs3"
 			},
 			"columnDelimiter": ",",
