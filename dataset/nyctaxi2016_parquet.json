@@ -17,28 +17,16 @@
 		},
 		"schema": [
 			{
+				"name": "VendorID",
+				"type": "INT32"
+			},
+			{
 				"name": "tpep_pickup_datetime",
 				"type": "INT96"
 			},
 			{
 				"name": "tpep_dropoff_datetime",
 				"type": "INT96"
-			},
-			{
-				"name": "pickup_date",
-				"type": "DATE"
-			},
-			{
-				"name": "dropoff_date",
-				"type": "DATE"
-			},
-			{
-				"name": "elapsed_minutes",
-				"type": "DOUBLE"
-			},
-			{
-				"name": "pickup_hour",
-				"type": "INT32"
 			},
 			{
 				"name": "passenger_count",
@@ -49,20 +37,16 @@
 				"type": "DOUBLE"
 			},
 			{
-				"name": "payment_type",
-				"type": "UTF8"
-			},
-			{
-				"name": "ratecodeid",
-				"type": "INT32"
-			},
-			{
 				"name": "pickup_longitude",
 				"type": "DOUBLE"
 			},
 			{
 				"name": "pickup_latitude",
 				"type": "DOUBLE"
+			},
+			{
+				"name": "RatecodeID",
+				"type": "INT32"
 			},
 			{
 				"name": "store_and_fwd_flag",
@@ -77,7 +61,15 @@
 				"type": "DOUBLE"
 			},
 			{
+				"name": "payment_type",
+				"type": "INT32"
+			},
+			{
 				"name": "fare_amount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "extra",
 				"type": "DOUBLE"
 			},
 			{
@@ -93,20 +85,12 @@
 				"type": "DOUBLE"
 			},
 			{
-				"name": "total_amount",
+				"name": "improvement_surcharge",
 				"type": "DOUBLE"
 			},
 			{
-				"name": "VendorID",
-				"type": "UTF8"
-			},
-			{
-				"name": "orig_geographyid",
-				"type": "INT32"
-			},
-			{
-				"name": "dest_geographyid",
-				"type": "INT32"
+				"name": "total_amount",
+				"type": "DOUBLE"
 			}
 		]
 	}
