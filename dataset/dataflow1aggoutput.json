@@ -1,0 +1,30 @@
+{
+	"name": "dataflow1aggoutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "blobsjhdatabricks",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"runtime": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@utcnow()",
+					"type": "Expression"
+				},
+				"container": "inputs3"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
