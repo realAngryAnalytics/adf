@@ -1,0 +1,23 @@
+{
+	"name": "triggerevt",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/nyctaxi/blobs/",
+			"scope": "/subscriptions/31e77061-7c45-4325-a0ec-1d348d195b23/resourceGroups/sjhdatabricksrg/providers/Microsoft.Storage/storageAccounts/sjhdatabricksstoragev2",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
