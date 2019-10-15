@@ -27,6 +27,16 @@
 				}
 			}
 		],
+		"parameters": {
+			"filesize": {
+				"type": "int",
+				"defaultValue": 0
+			},
+			"filename": {
+				"type": "string",
+				"defaultValue": "none"
+			}
+		},
 		"annotations": []
 	}
 }
