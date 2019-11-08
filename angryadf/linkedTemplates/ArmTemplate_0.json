@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "angryadf"
 		},
 		"blobstagingaccount_connectionString": {
@@ -18,6 +18,30 @@
 		"sqldwAdventureWorksDestination_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn": {
+			"type": "string",
+			"defaultValue": "ModifiedDate"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.watermarktable"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name": {
+			"type": "string",
+			"defaultValue": "WatermarkValue"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales_Staging"
 		}
 	},
 	"variables": {
@@ -262,7 +286,7 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"storedProcedureName": "[concat('[', 'ANGRY].bulk_copy_success')]",
+										"storedProcedureName": "[ANGRY].bulk_copy_success",
 										"storedProcedureParameters": {
 											"PartitionId": {
 												"value": {
@@ -485,7 +509,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[concat('[', 'ANGRY].[delta_load_w_updates]')]",
+							"storedProcedureName": "[[ANGRY].[delta_load_w_updates]",
 							"storedProcedureParameters": {
 								"LastModifiedDatetime": {
 									"value": {
@@ -712,7 +736,7 @@
 								"referenceName": "sqldwAdventureWorksDestTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "[concat('[', 'ANGRY].[reloadcontroltable]')]"
+									"TableName": "[[ANGRY].[reloadcontroltable]"
 								}
 							},
 							"firstRowOnly": false
@@ -735,6 +759,44 @@
 				"[concat(variables('factoryId'), '/datasets/sqlAdventureWorksSourceTable')]",
 				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]",
 				"[concat(variables('factoryId'), '/linkedServices/blobstagingaccount')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/delta_test_01')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "delta_load_w_updates",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"Data_Source_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name')]",
+							"Data_Source_WaterMarkColumn": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn')]",
+							"Data_Destination_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name')]",
+							"Control_Table_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name')]",
+							"Control_Table_Column_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name')]",
+							"Data_Destination_Staging_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 10,
+						"startTime": "2019-11-08T15:32:00.000Z",
+						"endTime": "2019-11-13T15:32:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/delta_load_w_updates')]"
 			]
 		}
 	]

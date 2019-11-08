@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "angryadf"
 		},
 		"blobstagingaccount_connectionString": {
@@ -19,13 +19,37 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
 		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn": {
+			"type": "string",
+			"defaultValue": "ModifiedDate"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.watermarktable"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name": {
+			"type": "string",
+			"defaultValue": "WatermarkValue"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales_Staging"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
 		},
 		"containerSasToken": {
 			"type": "string",
-			"metadata": "Sas Token to storage account containing linked ARM templates"
+			"metadata": "Sas token to storage account containing linked ARM templates"
 		}
 	},
 	"variables": {
@@ -54,6 +78,24 @@
 					},
 					"sqldwAdventureWorksDestination_connectionString": {
 						"value": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
+					},
+					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
+						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name')]"
+					},
+					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn": {
+						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn')]"
+					},
+					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name": {
+						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name')]"
+					},
+					"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name": {
+						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name')]"
+					},
+					"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name": {
+						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name')]"
+					},
+					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
+						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name')]"
 					}
 				}
 			},

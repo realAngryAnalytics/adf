@@ -13,6 +13,24 @@
 		},
 		"sqldwAdventureWorksDestination_connectionString": {
 			"value": ""
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
+			"value": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn": {
+			"value": "ModifiedDate"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name": {
+			"value": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name": {
+			"value": "ANGRY.watermarktable"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name": {
+			"value": "WatermarkValue"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
+			"value": "ANGRY.FactResellerSales_Staging"
 		}
 	}
 }
