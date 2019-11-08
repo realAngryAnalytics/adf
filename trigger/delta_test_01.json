@@ -3,7 +3,22 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [],
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "delta_load_w_updates",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Data_Source_Table_Name": "ANGRY.FactResellerSales",
+					"Data_Source_WaterMarkColumn": "ModifiedDate",
+					"Data_Destination_Table_Name": "ANGRY.FactResellerSales",
+					"Control_Table_Table_Name": "ANGRY.watermarktable",
+					"Control_Table_Column_Name": "WatermarkValue",
+					"Data_Destination_Staging_Table_Name": "ANGRY.FactResellerSales_Staging"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
