@@ -49,6 +49,46 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dummy_wait_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "wait_activity",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [
+							{
+								"name": "maxRuntimeInSeconds",
+								"value": "55"
+							}
+						],
+						"typeProperties": {
+							"waitTimeInSeconds": 60
+						}
+					}
+				],
+				"parameters": {
+					"parm_maxRuntimeInSeconds": {
+						"type": "int",
+						"defaultValue": 58
+					}
+				},
+				"variables": {
+					"var_maxRuntimeInSeconds": {
+						"type": "String",
+						"defaultValue": "56"
+					}
+				},
+				"folder": {
+					"name": "adfmonitoringworkshop"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/blobstagingaccount')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
