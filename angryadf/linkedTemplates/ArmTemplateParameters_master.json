@@ -32,6 +32,9 @@
 		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
 			"value": "ANGRY.FactResellerSales_Staging"
 		},
+		"dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds": {
+			"value": 58
+		},
 		"containerUri": {
 			"value": ""
 		},

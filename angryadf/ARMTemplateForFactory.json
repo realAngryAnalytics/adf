@@ -42,6 +42,10 @@
 		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
 			"type": "string",
 			"defaultValue": "ANGRY.FactResellerSales_Staging"
+		},
+		"dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds": {
+			"type": "int",
+			"defaultValue": 58
 		}
 	},
 	"variables": {
@@ -842,6 +846,41 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/delta_load_w_updates')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dummy_wait_trigger_01')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"annotation1"
+				],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "dummy_wait_pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"parm_maxRuntimeInSeconds": "[parameters('dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2019-11-11T16:45:00.000Z",
+						"endTime": "2019-11-15T16:45:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/dummy_wait_pipeline')]"
 			]
 		}
 	]

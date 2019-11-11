@@ -43,6 +43,10 @@
 			"type": "string",
 			"defaultValue": "ANGRY.FactResellerSales_Staging"
 		},
+		"dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds": {
+			"type": "int",
+			"defaultValue": 58
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -78,6 +82,9 @@
 					},
 					"sqldwAdventureWorksDestination_connectionString": {
 						"value": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
+					},
+					"dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds": {
+						"value": "[parameters('dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds')]"
 					},
 					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
 						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name')]"
