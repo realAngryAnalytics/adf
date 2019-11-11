@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "dummy_wait_pipeline",
 	"properties": {
 		"activities": [
 			{
-				"name": "dummy_wait_pipeline_sixty",
+				"name": "wait_activity",
 				"type": "Wait",
 				"dependsOn": [],
 				"userProperties": [
