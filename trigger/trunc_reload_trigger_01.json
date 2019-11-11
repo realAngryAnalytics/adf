@@ -1,7 +1,9 @@
 {
 	"name": "trunc_reload_trigger_01",
 	"properties": {
-		"annotations": [],
+		"annotations": [
+			"DimProduct"
+		],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
