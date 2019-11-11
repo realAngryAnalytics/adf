@@ -1,0 +1,27 @@
+{
+	"name": "trunc_reload_trigger_01",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "truncate_and_reload",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Control_Table_Name": "ANGRY.reloadcontroltable"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-11-11T18:48:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
