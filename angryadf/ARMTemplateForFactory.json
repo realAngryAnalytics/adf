@@ -814,7 +814,9 @@
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
+				"annotations": [
+					"dummy"
+				],
 				"runtimeState": "Started",
 				"pipelines": [
 					{
@@ -892,7 +894,9 @@
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
+				"annotations": [
+					"ANGRY.reloadcontroltable"
+				],
 				"runtimeState": "Started",
 				"pipelines": [
 					{
