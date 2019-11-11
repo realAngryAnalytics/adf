@@ -787,11 +787,16 @@
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
-						"frequency": "Minute",
-						"interval": 10,
+						"frequency": "Day",
+						"interval": 1,
 						"startTime": "2019-11-08T15:32:00.000Z",
-						"endTime": "2019-11-13T15:32:00.000Z",
-						"timeZone": "UTC"
+						"endTime": "2019-11-29T15:32:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								15
+							]
+						}
 					}
 				}
 			},
