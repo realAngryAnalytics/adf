@@ -17,6 +17,18 @@
 				}
 			}
 		],
+		"parameters": {
+			"parm_maxRuntimeInSeconds": {
+				"type": "int",
+				"defaultValue": 58
+			}
+		},
+		"variables": {
+			"var_maxRuntimeInSeconds": {
+				"type": "String",
+				"defaultValue": "56"
+			}
+		},
 		"folder": {
 			"name": "adfmonitoringworkshop"
 		},
