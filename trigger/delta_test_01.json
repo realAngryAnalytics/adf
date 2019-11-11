@@ -1,7 +1,9 @@
 {
 	"name": "delta_test_01",
 	"properties": {
-		"annotations": [],
+		"annotations": [
+			"dummy"
+		],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
