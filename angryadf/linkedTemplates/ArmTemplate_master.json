@@ -47,6 +47,10 @@
 			"type": "int",
 			"defaultValue": 58
 		},
+		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.reloadcontroltable"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -103,6 +107,9 @@
 					},
 					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
 						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name')]"
+					},
+					"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
+						"value": "[parameters('trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name')]"
 					}
 				}
 			},
