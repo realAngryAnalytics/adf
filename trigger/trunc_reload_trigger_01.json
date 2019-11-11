@@ -2,7 +2,7 @@
 	"name": "trunc_reload_trigger_01",
 	"properties": {
 		"annotations": [
-			"DimProduct"
+			"ANGRY.reloadcontroltable"
 		],
 		"runtimeState": "Started",
 		"pipelines": [
