@@ -1,0 +1,30 @@
+{
+	"name": "dummy_wait_trigger_01",
+	"properties": {
+		"annotations": [
+			"annotation1"
+		],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "dummy_wait_pipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"parm_maxRuntimeInSeconds": 58
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-11-11T16:45:00.000Z",
+				"endTime": "2019-11-15T16:45:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
