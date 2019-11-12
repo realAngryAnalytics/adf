@@ -12,6 +12,15 @@
 				}
 			}
 		],
+		"parameters": {
+			"parm_maxRuntimeInSeconds": {
+				"type": "int",
+				"defaultValue": 3200
+			}
+		},
+		"folder": {
+			"name": "adfmonitoringworkshop"
+		},
 		"annotations": []
 	}
 }
