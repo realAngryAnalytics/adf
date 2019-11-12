@@ -1,0 +1,17 @@
+{
+	"name": "dummy_wait_an_hour",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 3600
+				}
+			}
+		],
+		"annotations": []
+	}
+}
