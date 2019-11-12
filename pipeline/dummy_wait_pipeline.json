@@ -21,6 +21,10 @@
 			"parm_maxRuntimeInSeconds": {
 				"type": "int",
 				"defaultValue": 58
+			},
+			"parm_RuntimeInSeconds": {
+				"type": "int",
+				"defaultValue": 1000
 			}
 		},
 		"variables": {
