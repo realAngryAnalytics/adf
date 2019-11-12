@@ -913,7 +913,7 @@
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Hour",
-						"interval": 1,
+						"interval": 3,
 						"startTime": "2019-11-11T18:48:00.000Z",
 						"timeZone": "UTC"
 					}
