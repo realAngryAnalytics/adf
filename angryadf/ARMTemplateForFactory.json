@@ -47,6 +47,10 @@
 			"type": "int",
 			"defaultValue": 58
 		},
+		"dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds": {
+			"type": "int",
+			"defaultValue": 3200
+		},
 		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
 			"type": "string",
 			"defaultValue": "ANGRY.reloadcontroltable"
@@ -494,6 +498,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dummy_wait_an_hour')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 3600
+						}
+					}
+				],
+				"parameters": {
+					"parm_maxRuntimeInSeconds": {
+						"type": "int",
+						"defaultValue": 3200
+					}
+				},
+				"folder": {
+					"name": "adfmonitoringworkshop"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dummy_wait_pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -887,6 +920,42 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/dummy_wait_pipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dummy_wait_trigger_02_hour')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"wait"
+				],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "dummy_wait_an_hour",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"parm_maxRuntimeInSeconds": "[parameters('dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 65,
+					"startTime": "2019-11-12T04:43:00.000Z",
+					"endTime": "2019-11-15T04:43:00.000Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/dummy_wait_an_hour')]"
 			]
 		},
 		{

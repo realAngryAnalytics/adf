@@ -35,6 +35,9 @@
 		"dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds": {
 			"value": 58
 		},
+		"dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds": {
+			"value": 3200
+		},
 		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
 			"value": "ANGRY.reloadcontroltable"
 		}
