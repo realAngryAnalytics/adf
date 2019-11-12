@@ -1,0 +1,31 @@
+{
+	"name": "dummy_wait_trigger_02_hour",
+	"properties": {
+		"annotations": [
+			"wait"
+		],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "dummy_wait_an_hour",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"parm_maxRuntimeInSeconds": 3200
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 65,
+			"startTime": "2019-11-12T04:43:00.000Z",
+			"endTime": "2019-11-15T04:43:00.000Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}
