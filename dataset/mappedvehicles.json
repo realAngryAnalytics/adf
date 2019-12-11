@@ -15,31 +15,40 @@
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
+			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
 		"schema": [
 			{
+				"name": "oemid",
 				"type": "String"
 			},
 			{
+				"name": "oemname",
 				"type": "String"
 			},
 			{
+				"name": "ehiunitid",
 				"type": "String"
 			},
 			{
+				"name": "vin",
 				"type": "String"
 			},
 			{
+				"name": "fuelcapacity",
 				"type": "String"
 			},
 			{
+				"name": "activeindicator",
 				"type": "String"
 			},
 			{
+				"name": "srctsp",
 				"type": "String"
 			},
 			{
+				"name": "updtsp",
 				"type": "String"
 			}
 		]
