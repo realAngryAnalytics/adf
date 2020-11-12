@@ -1,0 +1,39 @@
+{
+	"name": "p_json_format_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT job_id ,\n(\nSELECT FirstName as [fields.name], EmailAddress [fields.email] from  SalesLT.Customer\nFOR JSON PATH\n) AS records\nFROM (select '111' as job_id) b\nORDER BY job_id\nFOR JSON PATH, WITHOUT_ARRAY_WRAPPER",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "dsCustomer",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "working_with_json"
+		},
+		"annotations": []
+	}
+}
