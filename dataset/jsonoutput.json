@@ -1,0 +1,135 @@
+{
+	"name": "jsonoutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sjhdatabrickstorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "working_with_json"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "steveh"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"commitInfo": {
+					"type": "object",
+					"properties": {
+						"timestamp": {
+							"type": "integer"
+						},
+						"userId": {
+							"type": "string"
+						},
+						"userName": {
+							"type": "string"
+						},
+						"operation": {
+							"type": "string"
+						},
+						"operationParameters": {
+							"type": "object",
+							"properties": {
+								"mode": {
+									"type": "string"
+								},
+								"partitionBy": {
+									"type": "string"
+								}
+							}
+						},
+						"notebook": {
+							"type": "object",
+							"properties": {
+								"notebookId": {
+									"type": "string"
+								}
+							}
+						},
+						"clusterId": {
+							"type": "string"
+						},
+						"isolationLevel": {
+							"type": "string"
+						},
+						"isBlindAppend": {
+							"type": "boolean"
+						}
+					}
+				},
+				"protocol": {
+					"type": "object",
+					"properties": {
+						"minReaderVersion": {
+							"type": "integer"
+						},
+						"minWriterVersion": {
+							"type": "integer"
+						}
+					}
+				},
+				"metaData": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"format": {
+							"type": "object",
+							"properties": {
+								"provider": {
+									"type": "string"
+								},
+								"options": {
+									"type": "object"
+								}
+							}
+						},
+						"schemaString": {
+							"type": "string"
+						},
+						"partitionColumns": {
+							"type": "array"
+						},
+						"configuration": {
+							"type": "object"
+						},
+						"createdTime": {
+							"type": "integer"
+						}
+					}
+				},
+				"add": {
+					"type": "object",
+					"properties": {
+						"path": {
+							"type": "string"
+						},
+						"partitionValues": {
+							"type": "object"
+						},
+						"size": {
+							"type": "integer"
+						},
+						"modificationTime": {
+							"type": "integer"
+						},
+						"dataChange": {
+							"type": "boolean"
+						},
+						"stats": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		}
+	}
+}
