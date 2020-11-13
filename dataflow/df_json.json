@@ -1,6 +1,9 @@
 {
-	"name": "dataflow1",
+	"name": "df_json",
 	"properties": {
+		"folder": {
+			"name": "working_with_json"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
