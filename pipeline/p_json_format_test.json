@@ -33,13 +33,9 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "JsonSink",
+									"type": "BinarySink",
 									"storeSettings": {
 										"type": "AzureBlobStorageWriteSettings"
-									},
-									"formatSettings": {
-										"type": "JsonWriteSettings",
-										"filePattern": "setOfObjects"
 									}
 								},
 								"enableStaging": false
@@ -52,7 +48,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "jsonoutput",
+									"referenceName": "binary_json",
 									"type": "DatasetReference"
 								}
 							]

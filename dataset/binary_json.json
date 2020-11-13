@@ -1,0 +1,17 @@
+{
+	"name": "binary_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sjhdatabrickstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "staging"
+			}
+		}
+	}
+}
