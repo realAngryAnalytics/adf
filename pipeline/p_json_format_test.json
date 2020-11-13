@@ -8,6 +8,10 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "True",
+						"type": "Expression"
+					},
 					"ifFalseActivities": [
 						{
 							"name": "Copy data1_copy1",
