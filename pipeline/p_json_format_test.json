@@ -14,8 +14,8 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Copy data1_copy1",
-							"type": "Copy",
+							"name": "Lookup1",
+							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -32,26 +32,31 @@
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"sink": {
-									"type": "BinarySink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									}
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
+								"dataset": {
 									"referenceName": "dsCustomer",
 									"type": "DatasetReference"
 								}
-							],
-							"outputs": [
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
 								{
-									"referenceName": "binary_json",
-									"type": "DatasetReference"
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
 								}
-							]
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "jsonoutput",
+								"value": {
+									"value": "@activity('Lookup1').output.firstRow.col",
+									"type": "Expression"
+								}
+							}
 						}
 					],
 					"ifTrueActivities": [
@@ -83,6 +88,11 @@
 				}
 			}
 		],
+		"variables": {
+			"jsonoutput": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "working_with_json"
 		},
