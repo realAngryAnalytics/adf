@@ -28,7 +28,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": "SELECT job_id ,\n(\nSELECT FirstName as [fields.name], EmailAddress [fields.email] from  SalesLT.Customer\nFOR JSON PATH\n) AS records\nFROM (select '111' as job_id) b\nORDER BY job_id\nFOR JSON PATH, WITHOUT_ARRAY_WRAPPER",
+									"sqlReaderQuery": "SELECT (\nSELECT job_id ,\n(\nSELECT FirstName as [fields.name], EmailAddress [fields.email] from  SalesLT.Customer\nFOR JSON PATH\n) AS records\nFROM (select '111' as job_id) b\nORDER BY job_id\nFOR JSON PATH, WITHOUT_ARRAY_WRAPPER ) as col",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -56,32 +56,6 @@
 									"value": "@activity('Lookup1').output.firstRow.col",
 									"type": "Expression"
 								}
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Data flow2",
-							"type": "ExecuteDataFlow",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataflow": {
-									"referenceName": "df_json",
-									"type": "DataFlowReference"
-								},
-								"compute": {
-									"coreCount": 8,
-									"computeType": "General"
-								},
-								"traceLevel": "Fine"
 							}
 						}
 					]
