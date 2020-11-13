@@ -1,0 +1,28 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dsCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "jsonoutput",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'SELECT (\\nSELECT job_id ,\\n(\\nSELECT FirstName as [fields.name], EmailAddress [fields.email] from  SalesLT.Customer\\nFOR JSON PATH\\n) AS records\\nFROM (select \\'111\\' as job_id) b\\nORDER BY job_id\\nFOR JSON PATH, WITHOUT_ARRAY_WRAPPER ) AS col',\n\tformat: 'query') ~> source1\nsource1 sink(input(\n\t\tcommitInfo as (timestamp as string, userId as string, userName as string, operation as string, operationParameters as (mode as string, partitionBy as string), notebook as (notebookId as string), clusterId as string, isolationLevel as string, isBlindAppend as boolean),\n\t\tprotocol as (minReaderVersion as string, minWriterVersion as string),\n\t\tmetaData as (id as string, format as (provider as string, options as ({} as string)), schemaString as string, partitionColumns as string[], configuration as ({} as string), createdTime as string),\n\t\tadd as (path as string, partitionValues as ({} as string), size as string, modificationTime as string, dataChange as boolean, stats as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}
