@@ -1,0 +1,206 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "angryadf"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/sjhsynapsestorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "https://sjhsynapsestorage.dfs.core.windows.net",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "**********"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telemetry2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {
+					"type": "object",
+					"properties": {
+						"recordtype": {
+							"type": "string"
+						},
+						"EventEnqueuedUTCTime": {
+							"type": "integer"
+						},
+						"telemetry": {
+							"type": "object",
+							"properties": {
+								"medallionid": {
+									"type": "string"
+								},
+								"pickup_location_id": {
+									"type": "integer"
+								},
+								"pickup_datetime": {
+									"type": "integer"
+								},
+								"passenger_count": {
+									"type": "integer"
+								},
+								"tolls_amount": {
+									"type": "integer"
+								},
+								"type": {
+									"type": "string"
+								},
+								"improvement_surcharge": {
+									"type": "number"
+								},
+								"dropoff_location_id": {
+									"type": "integer"
+								},
+								"trip_distance": {
+									"type": "number"
+								},
+								"store_and_fwd_flag": {
+									"type": "string"
+								},
+								"payment_type": {
+									"type": "string"
+								},
+								"rate_code_id": {
+									"type": "string"
+								},
+								"total_amount": {
+									"type": "number"
+								},
+								"vendor_id": {
+									"type": "string"
+								},
+								"extra": {
+									"type": "integer"
+								},
+								"vin": {
+									"type": "string"
+								},
+								"tip_amount": {
+									"type": "number"
+								},
+								"mta_tax": {
+									"type": "number"
+								},
+								"dropoff_datetime": {
+									"type": "integer"
+								}
+							}
+						},
+						"vin": {
+							"type": "string"
+						}
+					}
+				},
+				"typeProperties": {
+					"collectionName": "TripTelemetry2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/telemetry2parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sjhsynapsestorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "telemetry"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sjhsynapsestorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/p_telemetrysmall')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CosmosDbSqlApiSource",
+								"query": "select top 10000 * from c",
+								"preferredRegions": []
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telemetry2",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "telemetry2parquet",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Telemetry2')]",
+				"[concat(variables('factoryId'), '/datasets/telemetry2parquet')]"
+			]
+		}
+	]
+}

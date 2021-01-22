@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
 		},
+		"CosmosDb1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
+		},
+		"sjhsynapsestorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'sjhsynapsestorage'"
+		},
 		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
 			"type": "string",
 			"defaultValue": "ANGRY.FactResellerSales"
@@ -54,6 +62,10 @@
 		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
 			"type": "string",
 			"defaultValue": "ANGRY.reloadcontroltable"
+		},
+		"sjhsynapsestorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sjhsynapsestorage.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -86,7 +98,8 @@
 								"sqlReaderQuery": {
 									"value": "@concat('select PartitionId, DestTableName, FilterQuery from ', pipeline().parameters.Control_Table_Name, ' where success_ind is null OR success_ind <> ''Y''')",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "sqldwAdventureWorksDestTable",
@@ -140,12 +153,13 @@
 											"sqlReaderQuery": {
 												"value": "@item().FilterQuery",
 												"type": "Expression"
-											}
+											},
+											"partitionOption": "None"
 										},
 										"sink": {
 											"type": "SqlDWSink",
-											"allowPolyBase": true,
 											"writeBatchSize": 10000,
+											"allowPolyBase": true,
 											"polyBaseSettings": {
 												"rejectValue": 0,
 												"rejectType": "value",
@@ -282,7 +296,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlDWSource"
+								"type": "SqlDWSource",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "sqldwAdventureWorksDestTable",
@@ -313,7 +328,8 @@
 								"sqlReaderQuery": {
 									"value": "@concat('select MAX(',pipeline().parameters.Data_Source_WaterMarkColumn, ') as NewWatermarkValue from ',pipeline().parameters.Data_Source_Table_Name)",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "sqlAdventureWorksSourceTable",
@@ -357,16 +373,17 @@
 								"sqlReaderQuery": {
 									"value": "select * from \n@{pipeline().parameters.Data_Source_Table_Name} where @{pipeline().parameters.Data_Source_WaterMarkColumn} > '@{activity('LookupLastWaterMark').output.firstRow.WatermarkValue}' and @{pipeline().parameters.Data_Source_WaterMarkColumn} <= '@{activity('LookupCurrentWaterMark').output.firstRow.NewWatermarkValue}'",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "SqlDWSink",
-								"allowPolyBase": true,
 								"writeBatchSize": 10000,
 								"preCopyScript": {
 									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.Data_Destination_Staging_Table_Name)}",
 									"type": "Expression"
 								},
+								"allowPolyBase": true,
 								"polyBaseSettings": {
 									"rejectValue": 0,
 									"rejectType": "value",
@@ -609,16 +626,17 @@
 											"sqlReaderQuery": {
 												"value": "select * from @{item().SourceTableName}",
 												"type": "Expression"
-											}
+											},
+											"partitionOption": "None"
 										},
 										"sink": {
 											"type": "SqlDWSink",
-											"allowPolyBase": true,
 											"writeBatchSize": 10000,
 											"preCopyScript": {
 												"value": "TRUNCATE TABLE @{item().DestTableName}",
 												"type": "Expression"
 											},
+											"allowPolyBase": true,
 											"polyBaseSettings": {
 												"rejectValue": 0,
 												"rejectType": "value",
@@ -718,7 +736,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlDWSource"
+								"type": "SqlDWSource",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "sqldwAdventureWorksDestTable",
@@ -872,8 +891,8 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-11-08T15:32:00.000Z",
-						"endTime": "2019-11-29T15:32:00.000Z",
+						"startTime": "2019-11-08T15:32:00Z",
+						"endTime": "2019-11-29T15:32:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"hours": [
@@ -912,8 +931,8 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 15,
-						"startTime": "2019-11-11T16:45:00.000Z",
-						"endTime": "2019-11-15T16:45:00.000Z",
+						"startTime": "2019-11-11T16:45:00Z",
+						"endTime": "2019-11-15T16:45:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -983,13 +1002,220 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 3,
-						"startTime": "2019-11-11T18:48:00.000Z",
+						"startTime": "2019-11-11T18:48:00Z",
 						"timeZone": "UTC"
 					}
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/truncate_and_reload')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CosmosDb1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CosmosDb",
+				"typeProperties": {
+					"connectionString": "[parameters('CosmosDb1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sjhsynapsestorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sjhsynapsestorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('sjhsynapsestorage_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telemetry2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {
+					"type": "object",
+					"properties": {
+						"recordtype": {
+							"type": "string"
+						},
+						"EventEnqueuedUTCTime": {
+							"type": "integer"
+						},
+						"telemetry": {
+							"type": "object",
+							"properties": {
+								"medallionid": {
+									"type": "string"
+								},
+								"pickup_location_id": {
+									"type": "integer"
+								},
+								"pickup_datetime": {
+									"type": "integer"
+								},
+								"passenger_count": {
+									"type": "integer"
+								},
+								"tolls_amount": {
+									"type": "integer"
+								},
+								"type": {
+									"type": "string"
+								},
+								"improvement_surcharge": {
+									"type": "number"
+								},
+								"dropoff_location_id": {
+									"type": "integer"
+								},
+								"trip_distance": {
+									"type": "number"
+								},
+								"store_and_fwd_flag": {
+									"type": "string"
+								},
+								"payment_type": {
+									"type": "string"
+								},
+								"rate_code_id": {
+									"type": "string"
+								},
+								"total_amount": {
+									"type": "number"
+								},
+								"vendor_id": {
+									"type": "string"
+								},
+								"extra": {
+									"type": "integer"
+								},
+								"vin": {
+									"type": "string"
+								},
+								"tip_amount": {
+									"type": "number"
+								},
+								"mta_tax": {
+									"type": "number"
+								},
+								"dropoff_datetime": {
+									"type": "integer"
+								}
+							}
+						},
+						"vin": {
+							"type": "string"
+						}
+					}
+				},
+				"typeProperties": {
+					"collectionName": "TripTelemetry2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CosmosDb1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/telemetry2parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sjhsynapsestorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "telemetry"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sjhsynapsestorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/p_telemetrysmall')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CosmosDbSqlApiSource",
+								"query": "select top 10000 * from c",
+								"preferredRegions": []
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telemetry2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "telemetry2parquet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Telemetry2')]",
+				"[concat(variables('factoryId'), '/datasets/telemetry2parquet')]"
 			]
 		}
 	]

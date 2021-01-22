@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
 		},
+		"CosmosDb1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
+		},
+		"sjhsynapsestorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'sjhsynapsestorage'"
+		},
 		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
 			"type": "string",
 			"defaultValue": "ANGRY.FactResellerSales"
@@ -55,6 +63,10 @@
 			"type": "string",
 			"defaultValue": "ANGRY.reloadcontroltable"
 		},
+		"sjhsynapsestorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sjhsynapsestorage.dfs.core.windows.net"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -69,7 +81,7 @@
 	},
 	"resources": [
 		{
-			"name": "ArmTemplate_0",
+			"name": "angryadf_ArmTemplate_0",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -90,6 +102,15 @@
 					},
 					"sqldwAdventureWorksDestination_connectionString": {
 						"value": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
+					},
+					"CosmosDb1_connectionString": {
+						"value": "[parameters('CosmosDb1_connectionString')]"
+					},
+					"sjhsynapsestorage_accountKey": {
+						"value": "[parameters('sjhsynapsestorage_accountKey')]"
+					},
+					"sjhsynapsestorage_properties_typeProperties_url": {
+						"value": "[parameters('sjhsynapsestorage_properties_typeProperties_url')]"
 					},
 					"dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds": {
 						"value": "[parameters('dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds')]"
