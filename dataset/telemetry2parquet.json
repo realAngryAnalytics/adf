@@ -1,0 +1,19 @@
+{
+	"name": "telemetry2parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sjhsynapsestorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "telemetry"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

@@ -1,0 +1,90 @@
+{
+	"name": "Telemetry2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDb1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"recordtype": {
+					"type": "string"
+				},
+				"EventEnqueuedUTCTime": {
+					"type": "integer"
+				},
+				"telemetry": {
+					"type": "object",
+					"properties": {
+						"medallionid": {
+							"type": "string"
+						},
+						"pickup_location_id": {
+							"type": "integer"
+						},
+						"pickup_datetime": {
+							"type": "integer"
+						},
+						"passenger_count": {
+							"type": "integer"
+						},
+						"tolls_amount": {
+							"type": "integer"
+						},
+						"type": {
+							"type": "string"
+						},
+						"improvement_surcharge": {
+							"type": "number"
+						},
+						"dropoff_location_id": {
+							"type": "integer"
+						},
+						"trip_distance": {
+							"type": "number"
+						},
+						"store_and_fwd_flag": {
+							"type": "string"
+						},
+						"payment_type": {
+							"type": "string"
+						},
+						"rate_code_id": {
+							"type": "string"
+						},
+						"total_amount": {
+							"type": "number"
+						},
+						"vendor_id": {
+							"type": "string"
+						},
+						"extra": {
+							"type": "integer"
+						},
+						"vin": {
+							"type": "string"
+						},
+						"tip_amount": {
+							"type": "number"
+						},
+						"mta_tax": {
+							"type": "number"
+						},
+						"dropoff_datetime": {
+							"type": "integer"
+						}
+					}
+				},
+				"vin": {
+					"type": "string"
+				}
+			}
+		},
+		"typeProperties": {
+			"collectionName": "TripTelemetry2"
+		}
+	}
+}
