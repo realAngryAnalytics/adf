@@ -1476,7 +1476,8 @@
 							"sink": {
 								"type": "ParquetSink",
 								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
 								},
 								"formatSettings": {
 									"type": "ParquetWriteSettings"
@@ -1491,15 +1492,8 @@
 											"path": "$['recordtype']"
 										},
 										"sink": {
-											"name": "recordtype"
-										}
-									},
-									{
-										"source": {
-											"path": "$['EventEnqueuedUTCTime']"
-										},
-										"sink": {
-											"name": "EventEnqueuedUTCTime"
+											"name": "recordtype",
+											"type": "String"
 										}
 									},
 									{
@@ -1507,7 +1501,8 @@
 											"path": "$['telemetry']['medallionid']"
 										},
 										"sink": {
-											"name": "medallionid"
+											"name": "medallionid",
+											"type": "String"
 										}
 									},
 									{
@@ -1515,7 +1510,8 @@
 											"path": "$['telemetry']['pickup_location_id']"
 										},
 										"sink": {
-											"name": "pickup_location_id"
+											"name": "pickup_location_id",
+											"type": "String"
 										}
 									},
 									{
@@ -1523,7 +1519,8 @@
 											"path": "$['telemetry']['pickup_datetime']"
 										},
 										"sink": {
-											"name": "pickup_datetime"
+											"name": "pickup_datetime",
+											"type": "String"
 										}
 									},
 									{
@@ -1531,7 +1528,8 @@
 											"path": "$['telemetry']['passenger_count']"
 										},
 										"sink": {
-											"name": "passenger_count"
+											"name": "passenger_count",
+											"type": "String"
 										}
 									},
 									{
@@ -1539,7 +1537,8 @@
 											"path": "$['telemetry']['tolls_amount']"
 										},
 										"sink": {
-											"name": "tolls_amount"
+											"name": "tolls_amount",
+											"type": "String"
 										}
 									},
 									{
@@ -1547,7 +1546,8 @@
 											"path": "$['telemetry']['type']"
 										},
 										"sink": {
-											"name": "type"
+											"name": "type",
+											"type": "String"
 										}
 									},
 									{
@@ -1555,7 +1555,8 @@
 											"path": "$['telemetry']['improvement_surcharge']"
 										},
 										"sink": {
-											"name": "improvement_surcharge"
+											"name": "improvement_surcharge",
+											"type": "String"
 										}
 									},
 									{
@@ -1563,7 +1564,8 @@
 											"path": "$['telemetry']['dropoff_location_id']"
 										},
 										"sink": {
-											"name": "dropoff_location_id"
+											"name": "dropoff_location_id",
+											"type": "String"
 										}
 									},
 									{
@@ -1571,7 +1573,8 @@
 											"path": "$['telemetry']['trip_distance']"
 										},
 										"sink": {
-											"name": "trip_distance"
+											"name": "trip_distance",
+											"type": "String"
 										}
 									},
 									{
@@ -1579,7 +1582,8 @@
 											"path": "$['telemetry']['store_and_fwd_flag']"
 										},
 										"sink": {
-											"name": "store_and_fwd_flag"
+											"name": "store_and_fwd_flag",
+											"type": "String"
 										}
 									},
 									{
@@ -1587,7 +1591,8 @@
 											"path": "$['telemetry']['payment_type']"
 										},
 										"sink": {
-											"name": "payment_type"
+											"name": "payment_type",
+											"type": "String"
 										}
 									},
 									{
@@ -1595,7 +1600,8 @@
 											"path": "$['telemetry']['rate_code_id']"
 										},
 										"sink": {
-											"name": "rate_code_id"
+											"name": "rate_code_id",
+											"type": "String"
 										}
 									},
 									{
@@ -1603,7 +1609,8 @@
 											"path": "$['telemetry']['total_amount']"
 										},
 										"sink": {
-											"name": "total_amount"
+											"name": "total_amount",
+											"type": "String"
 										}
 									},
 									{
@@ -1611,7 +1618,8 @@
 											"path": "$['telemetry']['vendor_id']"
 										},
 										"sink": {
-											"name": "vendor_id"
+											"name": "vendor_id",
+											"type": "String"
 										}
 									},
 									{
@@ -1619,7 +1627,8 @@
 											"path": "$['telemetry']['extra']"
 										},
 										"sink": {
-											"name": "extra"
+											"name": "extra",
+											"type": "String"
 										}
 									},
 									{
@@ -1627,7 +1636,8 @@
 											"path": "$['telemetry']['vin']"
 										},
 										"sink": {
-											"name": "vin"
+											"name": "vin",
+											"type": "String"
 										}
 									},
 									{
@@ -1635,7 +1645,8 @@
 											"path": "$['telemetry']['tip_amount']"
 										},
 										"sink": {
-											"name": "tip_amount"
+											"name": "tip_amount",
+											"type": "String"
 										}
 									},
 									{
@@ -1643,7 +1654,8 @@
 											"path": "$['telemetry']['mta_tax']"
 										},
 										"sink": {
-											"name": "mta_tax"
+											"name": "mta_tax",
+											"type": "String"
 										}
 									},
 									{
@@ -1651,7 +1663,8 @@
 											"path": "$['telemetry']['dropoff_datetime']"
 										},
 										"sink": {
-											"name": "dropoff_datetime"
+											"name": "dropoff_datetime",
+											"type": "String"
 										}
 									},
 									{
@@ -1659,47 +1672,8 @@
 											"path": "$['id']"
 										},
 										"sink": {
-											"name": "id"
-										}
-									},
-									{
-										"source": {
-											"path": "$['_rid']"
-										},
-										"sink": {
-											"name": "_rid"
-										}
-									},
-									{
-										"source": {
-											"path": "$['_self']"
-										},
-										"sink": {
-											"name": "_self"
-										}
-									},
-									{
-										"source": {
-											"path": "$['_etag']"
-										},
-										"sink": {
-											"name": "_etag"
-										}
-									},
-									{
-										"source": {
-											"path": "$['_attachments']"
-										},
-										"sink": {
-											"name": "_attachments"
-										}
-									},
-									{
-										"source": {
-											"path": "$['_ts']"
-										},
-										"sink": {
-											"name": "_ts"
+											"name": "id",
+											"type": "String"
 										}
 									}
 								]
