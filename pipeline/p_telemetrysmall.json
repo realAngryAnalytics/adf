@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "CosmosDbSqlApiSource",
+						"query": "select * from c",
 						"preferredRegions": []
 					},
 					"sink": {
