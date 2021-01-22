@@ -1,0 +1,574 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "angryadf"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/p_telemetrysmall')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CosmosDbSqlApiSource",
+								"query": "select * from c",
+								"preferredRegions": []
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings",
+									"maxRowsPerFile": 100000,
+									"fileNamePrefix": "telemetry2"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['recordtype']"
+										},
+										"sink": {
+											"name": "recordtype"
+										}
+									},
+									{
+										"source": {
+											"path": "$['EventEnqueuedUTCTime']"
+										},
+										"sink": {
+											"name": "EventEnqueuedUTCTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['medallionid']"
+										},
+										"sink": {
+											"name": "medallionid"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['pickup_location_id']"
+										},
+										"sink": {
+											"name": "pickup_location_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['pickup_datetime']"
+										},
+										"sink": {
+											"name": "pickup_datetime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['passenger_count']"
+										},
+										"sink": {
+											"name": "passenger_count"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['tolls_amount']"
+										},
+										"sink": {
+											"name": "tolls_amount"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['type']"
+										},
+										"sink": {
+											"name": "type"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['improvement_surcharge']"
+										},
+										"sink": {
+											"name": "improvement_surcharge"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['dropoff_location_id']"
+										},
+										"sink": {
+											"name": "dropoff_location_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['trip_distance']"
+										},
+										"sink": {
+											"name": "trip_distance"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['store_and_fwd_flag']"
+										},
+										"sink": {
+											"name": "store_and_fwd_flag"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['payment_type']"
+										},
+										"sink": {
+											"name": "payment_type"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['rate_code_id']"
+										},
+										"sink": {
+											"name": "rate_code_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['total_amount']"
+										},
+										"sink": {
+											"name": "total_amount"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['vendor_id']"
+										},
+										"sink": {
+											"name": "vendor_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['extra']"
+										},
+										"sink": {
+											"name": "extra"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['vin']"
+										},
+										"sink": {
+											"name": "vin"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['tip_amount']"
+										},
+										"sink": {
+											"name": "tip_amount"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['mta_tax']"
+										},
+										"sink": {
+											"name": "mta_tax"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['dropoff_datetime']"
+										},
+										"sink": {
+											"name": "dropoff_datetime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['vin']"
+										},
+										"sink": {
+											"name": "vin2"
+										}
+									},
+									{
+										"source": {
+											"path": "$['id']"
+										},
+										"sink": {
+											"name": "id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_rid']"
+										},
+										"sink": {
+											"name": "_rid"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_self']"
+										},
+										"sink": {
+											"name": "_self"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_etag']"
+										},
+										"sink": {
+											"name": "_etag"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_attachments']"
+										},
+										"sink": {
+											"name": "_attachments"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_ts']"
+										},
+										"sink": {
+											"name": "_ts"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Telemetry2",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "telemetry2parquet",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/p_telemetry')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CosmosDbSqlApiSource",
+								"preferredRegions": []
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['recordtype']"
+										},
+										"sink": {
+											"name": "recordtype"
+										}
+									},
+									{
+										"source": {
+											"path": "$['EventEnqueuedUTCTime']"
+										},
+										"sink": {
+											"name": "EventEnqueuedUTCTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['medallionid']"
+										},
+										"sink": {
+											"name": "medallionid"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['pickup_location_id']"
+										},
+										"sink": {
+											"name": "pickup_location_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['pickup_datetime']"
+										},
+										"sink": {
+											"name": "pickup_datetime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['passenger_count']"
+										},
+										"sink": {
+											"name": "passenger_count"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['tolls_amount']"
+										},
+										"sink": {
+											"name": "tolls_amount"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['type']"
+										},
+										"sink": {
+											"name": "type"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['improvement_surcharge']"
+										},
+										"sink": {
+											"name": "improvement_surcharge"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['dropoff_location_id']"
+										},
+										"sink": {
+											"name": "dropoff_location_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['trip_distance']"
+										},
+										"sink": {
+											"name": "trip_distance"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['store_and_fwd_flag']"
+										},
+										"sink": {
+											"name": "store_and_fwd_flag"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['payment_type']"
+										},
+										"sink": {
+											"name": "payment_type"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['rate_code_id']"
+										},
+										"sink": {
+											"name": "rate_code_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['total_amount']"
+										},
+										"sink": {
+											"name": "total_amount"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['vendor_id']"
+										},
+										"sink": {
+											"name": "vendor_id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['extra']"
+										},
+										"sink": {
+											"name": "extra"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['vin']"
+										},
+										"sink": {
+											"name": "vin"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['tip_amount']"
+										},
+										"sink": {
+											"name": "tip_amount"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['mta_tax']"
+										},
+										"sink": {
+											"name": "mta_tax"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['dropoff_datetime']"
+										},
+										"sink": {
+											"name": "dropoff_datetime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['id']"
+										},
+										"sink": {
+											"name": "id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_rid']"
+										},
+										"sink": {
+											"name": "_rid"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_self']"
+										},
+										"sink": {
+											"name": "_self"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_etag']"
+										},
+										"sink": {
+											"name": "_etag"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_attachments']"
+										},
+										"sink": {
+											"name": "_attachments"
+										}
+									},
+									{
+										"source": {
+											"path": "$['_ts']"
+										},
+										"sink": {
+											"name": "_ts"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Telemetry2",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "telemetry2parquet",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
