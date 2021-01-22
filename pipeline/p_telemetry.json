@@ -56,7 +56,7 @@
 								},
 								"sink": {
 									"name": "pickup_location_id",
-									"type": "Int32"
+									"type": "String"
 								}
 							},
 							{
@@ -65,7 +65,7 @@
 								},
 								"sink": {
 									"name": "pickup_datetime",
-									"type": "Int64"
+									"type": "String"
 								}
 							},
 							{
@@ -74,7 +74,7 @@
 								},
 								"sink": {
 									"name": "passenger_count",
-									"type": "Int32"
+									"type": "String"
 								}
 							},
 							{
@@ -83,7 +83,7 @@
 								},
 								"sink": {
 									"name": "tolls_amount",
-									"type": "Double"
+									"type": "String"
 								}
 							},
 							{
@@ -101,7 +101,7 @@
 								},
 								"sink": {
 									"name": "improvement_surcharge",
-									"type": "Double"
+									"type": "String"
 								}
 							},
 							{
@@ -110,7 +110,7 @@
 								},
 								"sink": {
 									"name": "dropoff_location_id",
-									"type": "Int32"
+									"type": "String"
 								}
 							},
 							{
@@ -119,7 +119,7 @@
 								},
 								"sink": {
 									"name": "trip_distance",
-									"type": "Double"
+									"type": "String"
 								}
 							},
 							{
@@ -155,7 +155,7 @@
 								},
 								"sink": {
 									"name": "total_amount",
-									"type": "Double"
+									"type": "String"
 								}
 							},
 							{
@@ -173,7 +173,7 @@
 								},
 								"sink": {
 									"name": "extra",
-									"type": "Int32"
+									"type": "String"
 								}
 							},
 							{
@@ -191,7 +191,7 @@
 								},
 								"sink": {
 									"name": "tip_amount",
-									"type": "Double"
+									"type": "String"
 								}
 							},
 							{
@@ -200,7 +200,7 @@
 								},
 								"sink": {
 									"name": "mta_tax",
-									"type": "Double"
+									"type": "String"
 								}
 							},
 							{
@@ -209,7 +209,7 @@
 								},
 								"sink": {
 									"name": "dropoff_datetime",
-									"type": "Int64"
+									"type": "String"
 								}
 							},
 							{
