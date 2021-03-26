@@ -26,7 +26,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"waitTimeInSeconds": {
-						"value": "@if(equals(rand(1,50),49),rand(300,800),rand(10,60))",
+						"value": "@if(equals(rand(1,30),29),rand(300,800),rand(10,60))",
 						"type": "Expression"
 					}
 				}
