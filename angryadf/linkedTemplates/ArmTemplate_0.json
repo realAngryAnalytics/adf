@@ -7,9 +7,17 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "angryadf"
 		},
+		"CosmosDb1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
+		},
 		"blobstagingaccount_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
+		},
+		"sjhsynapsestorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'sjhsynapsestorage'"
 		},
 		"sqlAdventureWorksSource_connectionString": {
 			"type": "secureString",
@@ -18,14 +26,6 @@
 		"sqldwAdventureWorksDestination_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
-		},
-		"CosmosDb1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
-		},
-		"sjhsynapsestorage_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'sjhsynapsestorage'"
 		},
 		"sjhsynapsestorage_properties_typeProperties_url": {
 			"type": "string",
@@ -38,34 +38,6 @@
 		"dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds": {
 			"type": "int",
 			"defaultValue": 3200
-		},
-		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
-			"type": "string",
-			"defaultValue": "ANGRY.FactResellerSales"
-		},
-		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn": {
-			"type": "string",
-			"defaultValue": "ModifiedDate"
-		},
-		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name": {
-			"type": "string",
-			"defaultValue": "ANGRY.FactResellerSales"
-		},
-		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name": {
-			"type": "string",
-			"defaultValue": "ANGRY.watermarktable"
-		},
-		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name": {
-			"type": "string",
-			"defaultValue": "WatermarkValue"
-		},
-		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
-			"type": "string",
-			"defaultValue": "ANGRY.FactResellerSales_Staging"
-		},
-		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
-			"type": "string",
-			"defaultValue": "ANGRY.reloadcontroltable"
 		}
 	},
 	"variables": {
@@ -142,6 +114,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CosmosDb1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CosmosDb",
+				"typeProperties": {
+					"connectionString": "[parameters('CosmosDb1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/blobstagingaccount')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -150,6 +135,23 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('blobstagingaccount_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sjhsynapsestorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sjhsynapsestorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('sjhsynapsestorage_accountKey')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -181,159 +183,50 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CosmosDb1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/p_metricsadvisor_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"type": "CosmosDb",
-				"typeProperties": {
-					"connectionString": "[parameters('CosmosDb1_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sjhsynapsestorage')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('sjhsynapsestorage_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('sjhsynapsestorage_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqlAdventureWorksSourceTable')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqlAdventureWorksSource",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TableName": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqlAdventureWorksSource')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqldwAdventureWorksDestTable')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sqldwAdventureWorksDestination",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TableName": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dummy_wait_trigger_01')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [
-					"annotation1"
-				],
-				"runtimeState": "Started",
-				"pipelines": [
+				"activities": [
 					{
-						"pipelineReference": {
-							"referenceName": "dummy_wait_pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"parm_maxRuntimeInSeconds": "[parameters('dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "X",
+							"value": "2"
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": {
+								"value": "@if(equals(rand(1,50),49),rand(300,800),rand(10,60))",
+								"type": "Expression"
+							}
 						}
 					}
 				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2019-11-11T16:45:00Z",
-						"endTime": "2019-11-15T16:45:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/dummy_wait_pipeline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dummy_wait_trigger_02_hour')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [
-					"wait"
-				],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "dummy_wait_an_hour",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"parm_maxRuntimeInSeconds": "[parameters('dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+				"variables": {
+					"X": {
+						"type": "String",
+						"defaultValue": "1"
 					}
 				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 65,
-					"startTime": "2019-11-12T04:43:00.000Z",
-					"endTime": "2019-11-15T04:43:00.000Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
+				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/dummy_wait_an_hour')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Telemetry2')]",
@@ -431,6 +324,60 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sqlAdventureWorksSourceTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqlAdventureWorksSource",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sqlAdventureWorksSource')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqldwAdventureWorksDestTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sqldwAdventureWorksDestination",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/telemetry2parquet')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -452,6 +399,109 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sjhsynapsestorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dummy_wait_trigger_01')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"annotation1"
+				],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "dummy_wait_pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"parm_maxRuntimeInSeconds": "[parameters('dummy_wait_trigger_01_properties_dummy_wait_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2019-11-11T16:45:00Z",
+						"endTime": "2019-11-15T16:45:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/dummy_wait_pipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dummy_wait_trigger_02_hour')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"wait"
+				],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "dummy_wait_an_hour",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"parm_maxRuntimeInSeconds": "[parameters('dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 65,
+					"startTime": "2019-11-12T04:43:00Z",
+					"endTime": "2019-11-15T04:43:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/dummy_wait_an_hour')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/t_metricsadvisor_test')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "p_metricsadvisor_test",
+						"type": "PipelineReference"
+					},
+					"parameters": {}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2021-03-26T15:30:00Z",
+					"endTime": "2021-04-10T15:30:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/p_metricsadvisor_test')]"
 			]
 		},
 		{
@@ -897,151 +947,18 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/truncate_and_reload')]",
+			"name": "[concat(parameters('factoryName'), '/p_telemetry')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "ForEachLookupTable",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetReloadList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetReloadList').output.value",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "lookup_tbl_copy",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 1,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlSource",
-											"sqlReaderQuery": {
-												"value": "select * from @{item().SourceTableName}",
-												"type": "Expression"
-											},
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "SqlDWSink",
-											"writeBatchSize": 10000,
-											"preCopyScript": {
-												"value": "TRUNCATE TABLE @{item().DestTableName}",
-												"type": "Expression"
-											},
-											"allowPolyBase": true,
-											"polyBaseSettings": {
-												"rejectValue": 0,
-												"rejectType": "value",
-												"useTypeDefault": true
-											}
-										},
-										"enableStaging": true,
-										"stagingSettings": {
-											"linkedServiceName": {
-												"referenceName": "blobstagingaccount",
-												"type": "LinkedServiceReference"
-											},
-											"path": "adfstagingcopydata",
-											"enableCompression": false
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "sqlAdventureWorksSourceTable",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": {
-													"value": "@{item().SourceTableName}",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "sqldwAdventureWorksDestTable",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": "@{item().DestTableName}"
-											}
-										}
-									]
-								},
-								{
-									"name": "UpdateWatermark",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [
-										{
-											"activity": "lookup_tbl_copy",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "ANGRY.update_watermark",
-										"storedProcedureParameters": {
-											"LastModifiedtime": {
-												"value": {
-													"value": "@utcnow()",
-													"type": "Expression"
-												},
-												"type": "DateTime"
-											},
-											"TableName": {
-												"value": {
-													"value": "@{item().DestTableName}",
-													"type": "Expression"
-												},
-												"type": "String"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "sqldwAdventureWorksDestination",
-										"type": "LinkedServiceReference"
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "GetReloadList",
-						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
-						"type": "Lookup",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
-							"retry": 2,
+							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -1049,36 +966,236 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlDWSource",
-								"partitionOption": "None"
+								"type": "CosmosDbSqlApiSource",
+								"preferredRegions": []
 							},
-							"dataset": {
-								"referenceName": "sqldwAdventureWorksDestTable",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "[[ANGRY].[reloadcontroltable]"
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
 								}
 							},
-							"firstRowOnly": false
-						}
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['recordtype']"
+										},
+										"sink": {
+											"name": "recordtype",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['medallionid']"
+										},
+										"sink": {
+											"name": "medallionid",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['pickup_location_id']"
+										},
+										"sink": {
+											"name": "pickup_location_id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['pickup_datetime']"
+										},
+										"sink": {
+											"name": "pickup_datetime",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['passenger_count']"
+										},
+										"sink": {
+											"name": "passenger_count",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['tolls_amount']"
+										},
+										"sink": {
+											"name": "tolls_amount",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['type']"
+										},
+										"sink": {
+											"name": "type",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['improvement_surcharge']"
+										},
+										"sink": {
+											"name": "improvement_surcharge",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['dropoff_location_id']"
+										},
+										"sink": {
+											"name": "dropoff_location_id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['trip_distance']"
+										},
+										"sink": {
+											"name": "trip_distance",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['store_and_fwd_flag']"
+										},
+										"sink": {
+											"name": "store_and_fwd_flag",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['payment_type']"
+										},
+										"sink": {
+											"name": "payment_type",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['rate_code_id']"
+										},
+										"sink": {
+											"name": "rate_code_id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['total_amount']"
+										},
+										"sink": {
+											"name": "total_amount",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['vendor_id']"
+										},
+										"sink": {
+											"name": "vendor_id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['extra']"
+										},
+										"sink": {
+											"name": "extra",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['vin']"
+										},
+										"sink": {
+											"name": "vin",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['tip_amount']"
+										},
+										"sink": {
+											"name": "tip_amount",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['mta_tax']"
+										},
+										"sink": {
+											"name": "mta_tax",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['telemetry']['dropoff_datetime']"
+										},
+										"sink": {
+											"name": "dropoff_datetime",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['id']"
+										},
+										"sink": {
+											"name": "id",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Telemetry2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "telemetry2parquet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
-				"parameters": {
-					"Control_Table_Name": {
-						"type": "String",
-						"defaultValue": "ANGRY.reloadcontroltable"
-					}
-				},
-				"folder": {
-					"name": "truncate_and_reload"
-				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sqldwAdventureWorksDestTable')]",
-				"[concat(variables('factoryId'), '/datasets/sqlAdventureWorksSourceTable')]",
-				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]",
-				"[concat(variables('factoryId'), '/linkedServices/blobstagingaccount')]"
+				"[concat(variables('factoryId'), '/datasets/Telemetry2')]",
+				"[concat(variables('factoryId'), '/datasets/telemetry2parquet')]"
 			]
 		},
 		{
@@ -1372,18 +1489,151 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/p_telemetry')]",
+			"name": "[concat(parameters('factoryName'), '/truncate_and_reload')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
-						"type": "Copy",
+						"name": "ForEachLookupTable",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetReloadList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetReloadList').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 5,
+							"activities": [
+								{
+									"name": "lookup_tbl_copy",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 1,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlSource",
+											"sqlReaderQuery": {
+												"value": "select * from @{item().SourceTableName}",
+												"type": "Expression"
+											},
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"writeBatchSize": 10000,
+											"preCopyScript": {
+												"value": "TRUNCATE TABLE @{item().DestTableName}",
+												"type": "Expression"
+											},
+											"allowPolyBase": true,
+											"polyBaseSettings": {
+												"rejectValue": 0,
+												"rejectType": "value",
+												"useTypeDefault": true
+											}
+										},
+										"enableStaging": true,
+										"stagingSettings": {
+											"linkedServiceName": {
+												"referenceName": "blobstagingaccount",
+												"type": "LinkedServiceReference"
+											},
+											"path": "adfstagingcopydata",
+											"enableCompression": false
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "sqlAdventureWorksSourceTable",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": {
+													"value": "@{item().SourceTableName}",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sqldwAdventureWorksDestTable",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "@{item().DestTableName}"
+											}
+										}
+									]
+								},
+								{
+									"name": "UpdateWatermark",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "lookup_tbl_copy",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "ANGRY.update_watermark",
+										"storedProcedureParameters": {
+											"LastModifiedtime": {
+												"value": {
+													"value": "@utcnow()",
+													"type": "Expression"
+												},
+												"type": "DateTime"
+											},
+											"TableName": {
+												"value": {
+													"value": "@{item().DestTableName}",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "sqldwAdventureWorksDestination",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "GetReloadList",
+						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
-							"retry": 0,
+							"retry": 2,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -1391,315 +1641,36 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "CosmosDbSqlApiSource",
-								"preferredRegions": []
+								"type": "SqlDWSource",
+								"partitionOption": "None"
 							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings",
-									"copyBehavior": "FlattenHierarchy"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
+							"dataset": {
+								"referenceName": "sqldwAdventureWorksDestTable",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "[[ANGRY].[reloadcontroltable]"
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['recordtype']"
-										},
-										"sink": {
-											"name": "recordtype",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['medallionid']"
-										},
-										"sink": {
-											"name": "medallionid",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['pickup_location_id']"
-										},
-										"sink": {
-											"name": "pickup_location_id",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['pickup_datetime']"
-										},
-										"sink": {
-											"name": "pickup_datetime",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['passenger_count']"
-										},
-										"sink": {
-											"name": "passenger_count",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['tolls_amount']"
-										},
-										"sink": {
-											"name": "tolls_amount",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['type']"
-										},
-										"sink": {
-											"name": "type",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['improvement_surcharge']"
-										},
-										"sink": {
-											"name": "improvement_surcharge",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['dropoff_location_id']"
-										},
-										"sink": {
-											"name": "dropoff_location_id",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['trip_distance']"
-										},
-										"sink": {
-											"name": "trip_distance",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['store_and_fwd_flag']"
-										},
-										"sink": {
-											"name": "store_and_fwd_flag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['payment_type']"
-										},
-										"sink": {
-											"name": "payment_type",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['rate_code_id']"
-										},
-										"sink": {
-											"name": "rate_code_id",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['total_amount']"
-										},
-										"sink": {
-											"name": "total_amount",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['vendor_id']"
-										},
-										"sink": {
-											"name": "vendor_id",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['extra']"
-										},
-										"sink": {
-											"name": "extra",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['vin']"
-										},
-										"sink": {
-											"name": "vin",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['tip_amount']"
-										},
-										"sink": {
-											"name": "tip_amount",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['mta_tax']"
-										},
-										"sink": {
-											"name": "mta_tax",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['telemetry']['dropoff_datetime']"
-										},
-										"sink": {
-											"name": "dropoff_datetime",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['id']"
-										},
-										"sink": {
-											"name": "id",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Telemetry2",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "telemetry2parquet",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+							"firstRowOnly": false
+						}
 					}
 				],
+				"parameters": {
+					"Control_Table_Name": {
+						"type": "String",
+						"defaultValue": "ANGRY.reloadcontroltable"
+					}
+				},
+				"folder": {
+					"name": "truncate_and_reload"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Telemetry2')]",
-				"[concat(variables('factoryId'), '/datasets/telemetry2parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/delta_test_01')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [
-					"dummy"
-				],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "delta_load_w_updates",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"Data_Source_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name')]",
-							"Data_Source_WaterMarkColumn": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn')]",
-							"Data_Destination_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name')]",
-							"Control_Table_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name')]",
-							"Control_Table_Column_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name')]",
-							"Data_Destination_Staging_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-11-08T15:32:00Z",
-						"endTime": "2019-11-29T15:32:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"hours": [
-								15
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/delta_load_w_updates')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trunc_reload_trigger_01')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [
-					"ANGRY.reloadcontroltable"
-				],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "truncate_and_reload",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"Control_Table_Name": "[parameters('trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 3,
-						"startTime": "2019-11-11T18:48:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/truncate_and_reload')]"
+				"[concat(variables('factoryId'), '/datasets/sqldwAdventureWorksDestTable')]",
+				"[concat(variables('factoryId'), '/datasets/sqlAdventureWorksSourceTable')]",
+				"[concat(variables('factoryId'), '/linkedServices/sqldwAdventureWorksDestination')]",
+				"[concat(variables('factoryId'), '/linkedServices/blobstagingaccount')]"
 			]
 		}
 	]

@@ -5,7 +5,13 @@
 		"factoryName": {
 			"value": "angryadf"
 		},
+		"CosmosDb1_connectionString": {
+			"value": ""
+		},
 		"blobstagingaccount_connectionString": {
+			"value": ""
+		},
+		"sjhsynapsestorage_accountKey": {
 			"value": ""
 		},
 		"sqlAdventureWorksSource_connectionString": {
@@ -14,11 +20,8 @@
 		"sqldwAdventureWorksDestination_connectionString": {
 			"value": ""
 		},
-		"CosmosDb1_connectionString": {
-			"value": ""
-		},
-		"sjhsynapsestorage_accountKey": {
-			"value": ""
+		"sjhsynapsestorage_properties_typeProperties_url": {
+			"value": "https://sjhsynapsestorage.dfs.core.windows.net"
 		},
 		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
 			"value": "ANGRY.FactResellerSales"
@@ -46,9 +49,6 @@
 		},
 		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
 			"value": "ANGRY.reloadcontroltable"
-		},
-		"sjhsynapsestorage_properties_typeProperties_url": {
-			"value": "https://sjhsynapsestorage.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"value": ""

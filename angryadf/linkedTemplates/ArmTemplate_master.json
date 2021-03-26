@@ -7,9 +7,17 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "angryadf"
 		},
+		"CosmosDb1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
+		},
 		"blobstagingaccount_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'blobstagingaccount'"
+		},
+		"sjhsynapsestorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'sjhsynapsestorage'"
 		},
 		"sqlAdventureWorksSource_connectionString": {
 			"type": "secureString",
@@ -19,13 +27,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sqldwAdventureWorksDestination'"
 		},
-		"CosmosDb1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
-		},
-		"sjhsynapsestorage_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'sjhsynapsestorage'"
+		"sjhsynapsestorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sjhsynapsestorage.dfs.core.windows.net"
 		},
 		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
 			"type": "string",
@@ -63,10 +67,6 @@
 			"type": "string",
 			"defaultValue": "ANGRY.reloadcontroltable"
 		},
-		"sjhsynapsestorage_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://sjhsynapsestorage.dfs.core.windows.net"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -94,20 +94,20 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"CosmosDb1_connectionString": {
+						"value": "[parameters('CosmosDb1_connectionString')]"
+					},
 					"blobstagingaccount_connectionString": {
 						"value": "[parameters('blobstagingaccount_connectionString')]"
+					},
+					"sjhsynapsestorage_accountKey": {
+						"value": "[parameters('sjhsynapsestorage_accountKey')]"
 					},
 					"sqlAdventureWorksSource_connectionString": {
 						"value": "[parameters('sqlAdventureWorksSource_connectionString')]"
 					},
 					"sqldwAdventureWorksDestination_connectionString": {
 						"value": "[parameters('sqldwAdventureWorksDestination_connectionString')]"
-					},
-					"CosmosDb1_connectionString": {
-						"value": "[parameters('CosmosDb1_connectionString')]"
-					},
-					"sjhsynapsestorage_accountKey": {
-						"value": "[parameters('sjhsynapsestorage_accountKey')]"
 					},
 					"sjhsynapsestorage_properties_typeProperties_url": {
 						"value": "[parameters('sjhsynapsestorage_properties_typeProperties_url')]"
@@ -117,6 +117,24 @@
 					},
 					"dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds": {
 						"value": "[parameters('dummy_wait_trigger_02_hour_properties_pipeline_parameters_parm_maxRuntimeInSeconds')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "angryadf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
 						"value": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name')]"
@@ -141,7 +159,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'angryadf_ArmTemplate_0')]"
+			]
 		}
 	]
 }

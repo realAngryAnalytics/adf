@@ -1,0 +1,119 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "angryadf"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn": {
+			"type": "string",
+			"defaultValue": "ModifiedDate"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.watermarktable"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name": {
+			"type": "string",
+			"defaultValue": "WatermarkValue"
+		},
+		"delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.FactResellerSales_Staging"
+		},
+		"trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name": {
+			"type": "string",
+			"defaultValue": "ANGRY.reloadcontroltable"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/delta_test_01')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"dummy"
+				],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "delta_load_w_updates",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"Data_Source_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_Table_Name')]",
+							"Data_Source_WaterMarkColumn": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Source_WaterMarkColumn')]",
+							"Data_Destination_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Table_Name')]",
+							"Control_Table_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Table_Name')]",
+							"Control_Table_Column_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Control_Table_Column_Name')]",
+							"Data_Destination_Staging_Table_Name": "[parameters('delta_test_01_properties_delta_load_w_updates_parameters_Data_Destination_Staging_Table_Name')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-11-08T15:32:00Z",
+						"endTime": "2019-11-29T15:32:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								15
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trunc_reload_trigger_01')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [
+					"ANGRY.reloadcontroltable"
+				],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "truncate_and_reload",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"Control_Table_Name": "[parameters('trunc_reload_trigger_01_properties_truncate_and_reload_parameters_Control_Table_Name')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 3,
+						"startTime": "2019-11-11T18:48:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
