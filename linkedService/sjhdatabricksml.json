@@ -1,0 +1,13 @@
+{
+	"name": "sjhdatabricksml",
+	"properties": {
+		"annotations": [],
+		"type": "AzureMLService",
+		"typeProperties": {
+			"subscriptionId": "31e77061-7c45-4325-a0ec-1d348d195b23",
+			"resourceGroupName": "sjhdatabricksrg",
+			"mlWorkspaceName": "sjhdatabricksml",
+			"authentication": "MSI"
+		}
+	}
+}
